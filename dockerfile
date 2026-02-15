@@ -7,10 +7,19 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libudev-dev \
     protobuf-compiler \
     ca-certificates \
+    clang \
+    llvm \
+    llvm-dev \
+    libclang-dev \
     git \
  && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /build
-
 RUN git clone --depth=1 https://github.com/anza-xyz/agave.git
+WORKDIR /build/agave
+RUN cargo build --release -p agave-validator
 
+WORKDIR /build
+RUN git clone --depth=1 https://github.com/rpcpool/yellowstone-grpc.git
+WORKDIR /build/yellowstone-grpc/yellowstone-grpc-geyser
+RUN cargo build --release
